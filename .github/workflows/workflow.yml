@@ -62,9 +62,11 @@ jobs:
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
+          pwd
           ls
           pip config list -v
           pip3 install west
+          pip install requests -v
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           west init -l . || true
