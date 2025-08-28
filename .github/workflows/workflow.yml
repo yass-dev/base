@@ -45,6 +45,30 @@ jobs:
           echo "github.event.pull_request.base.ref : ${{ github.event.pull_request.base.ref }}"
           echo "github.event.pull_request.base.sha : ${{ github.event.pull_request.base.sha }}"
 
+
+  manifest:
+    runs-on: ubuntu-24.04
+    name: Manifest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          path: .
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: west setup
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        working-directory: ncs/nrf-bm
+        run: |
+          ls
+          pip3 install west
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          west init -l . || true
+
       # - name: Dump raw event JSON (log)
       #   run: |
       #     echo "::group::Raw $GITHUB_EVENT_PATH"
