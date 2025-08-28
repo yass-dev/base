@@ -61,7 +61,6 @@ jobs:
       - name: west setup
         env:
           BASE_REF: ${{ github.base_ref }}
-        working-directory: ncs/nrf-bm
         run: |
           ls
           pip config list -v
