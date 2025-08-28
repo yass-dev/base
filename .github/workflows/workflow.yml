@@ -34,15 +34,15 @@ jobs:
         run: |
           echo "Event: ${GITHUB_EVENT_NAME}"
           echo "Event file: ${GITHUB_EVENT_PATH}"
-          echo "Actor: ${{ github.actor }}"
-          echo "Repository: ${{ github.repository }}"
-          echo "Is fork PR: ${{ github.event.pull_request.head.repo.fork }}"
-          echo "PR number: ${{ github.event.pull_request.number }}"
-          echo "Head repo: ${{ github.event.pull_request.head.repo.full_name }}"
-          echo "Head ref : ${{ github.event.pull_request.head.ref }}"
-          echo "Head sha : ${{ github.event.pull_request.head.sha }}"
-          echo "Base ref : ${{ github.event.pull_request.base.ref }}"
-          echo "Base sha : ${{ github.event.pull_request.base.sha }}"
+          echo "github.actor: ${{ github.actor }}"
+          echo "github.repository: ${{ github.repository }}"
+          echo "github.event.pull_request.head.repo.fork: ${{ github.event.pull_request.head.repo.fork }}"
+          echo "github.event.pull_request.number: ${{ github.event.pull_request.number }}"
+          echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "github.event.pull_request.head.ref : ${{ github.event.pull_request.head.ref }}"
+          echo "github.event.pull_request.head.sha : ${{ github.event.pull_request.head.sha }}"
+          echo "github.event.pull_request.base.ref : ${{ github.event.pull_request.base.ref }}"
+          echo "github.event.pull_request.base.sha : ${{ github.event.pull_request.base.sha }}"
 
       # - name: Dump raw event JSON (log)
       #   run: |
