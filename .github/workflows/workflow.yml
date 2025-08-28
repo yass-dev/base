@@ -1,0 +1,115 @@
+name: PR Target – Event Dumper
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - edited
+      - ready_for_review
+      - converted_to_draft
+      - labeled
+      - unlabeled
+      - review_requested
+      - review_request_removed
+      - unlocked
+      - auto_merge_enabled
+      - auto_merge_disabled
+      - closed
+
+# Minimal necessary permissions; add others only if you need them.
+permissions:
+  contents: read
+  pull-requests: write   # to post a summary comment
+  actions: read
+
+jobs:
+  dump:
+    name: Dump PR-target event
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Meta (quick view)
+        run: |
+          echo "Event: ${GITHUB_EVENT_NAME}"
+          echo "Event file: ${GITHUB_EVENT_PATH}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Is fork PR: ${{ github.event.pull_request.head.repo.fork }}"
+          echo "PR number: ${{ github.event.pull_request.number }}"
+          echo "Head repo: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "Head ref : ${{ github.event.pull_request.head.ref }}"
+          echo "Head sha : ${{ github.event.pull_request.head.sha }}"
+          echo "Base ref : ${{ github.event.pull_request.base.ref }}"
+          echo "Base sha : ${{ github.event.pull_request.base.sha }}"
+
+      - name: Dump raw event JSON (log)
+        run: |
+          echo "::group::Raw $GITHUB_EVENT_PATH"
+          cat "$GITHUB_EVENT_PATH"
+          echo
+          echo "::endgroup::"
+
+      - name: Prepare Node (for pretty print)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Pretty-print event to file
+        run: |
+          node -e "const fs=require('fs');const p=process.env.GITHUB_EVENT_PATH;const j=JSON.parse(fs.readFileSync(p,'utf8'));fs.writeFileSync('event.pretty.json',JSON.stringify(j,null,2));console.log('Wrote event.pretty.json');"
+
+      - name: Dump github context (full)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.startGroup('github context');
+            core.info(JSON.stringify(context, null, 2));
+            core.endGroup();
+
+      - name: Dump environment variables (masked by Actions)
+        run: |
+          echo "::group::env"
+          env | sort
+          echo "::endgroup::"
+
+      - name: Attach event JSON as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-target-event-${{ github.run_id }}
+          path: event.pretty.json
+          retention-days: 7
+
+      - name: Short summary comment on PR
+        if: ${{ github.event.pull_request.number }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const lines = [
+              '### PR Target – Event Dumper',
+              '',
+              `Event: \`${context.eventName}\` – action: \`${context.payload.action || 'N/A'}\``,
+              `Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              '',
+              '**Head**',
+              `- repo: \`${pr.head.repo.full_name}\``,
+              `- ref: \`${pr.head.ref}\``,
+              `- sha: \`${pr.head.sha}\``,
+              '',
+              '**Base**',
+              `- ref: \`${pr.base.ref}\``,
+              `- sha: \`${pr.base.sha}\``,
+              '',
+              'Artifact: **event.pretty.json** is attached to this run.',
+              '',
+              '> Note: Raw payload and full github context are visible in Action logs.'
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: lines
+            });
