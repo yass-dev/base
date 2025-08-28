@@ -64,6 +64,7 @@ jobs:
         working-directory: ncs/nrf-bm
         run: |
           ls
+          pip config list -v
           pip3 install west
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
