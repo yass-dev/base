@@ -35,6 +35,7 @@ jobs:
           echo "Event: ${GITHUB_EVENT_NAME}"
           echo "Event file: ${GITHUB_EVENT_PATH}"
           echo "github.actor: ${{ github.actor }}"
+          echo "github.event.repository.name: ${{ github.event.repository.name }}""
           echo "github.repository: ${{ github.repository }}"
           echo "github.event.pull_request.head.repo.fork: ${{ github.event.pull_request.head.repo.fork }}"
           echo "github.event.pull_request.number: ${{ github.event.pull_request.number }}"
