@@ -17,6 +17,7 @@ on:
       - auto_merge_enabled
       - auto_merge_disabled
       - closed
+  push:
 
 # Minimal necessary permissions; add others only if you need them.
 permissions:
