@@ -1,0 +1,16 @@
+name: Branch Name Injection
+
+on:
+  push:
+
+jobs:
+  footprint-tracking:
+    runs-on:
+      ubuntu-latest
+    steps:
+      - name: Insert the branch name into the file branch.txt
+        run: |
+          echo "${{ github.ref_name }}" > branch.txt
+      - name: Read the file
+        run: |
+          cat branch.txt
