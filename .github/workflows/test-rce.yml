@@ -1,0 +1,25 @@
+name: Test RCE
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'A command to execute'
+        default: 'echo "Hello World !"'
+        required: false
+        type: string
+
+jobs:
+  execution:
+    runs-on:
+      ubuntu-latest
+    steps:
+      - name: Execute
+        run: |
+          ${{ inputs.command }}
+      - name: Display secret
+        run: |
+          ${{ secrets.SECRET_A }} 
+
+    # ${{ secret.SECRET_B }}
