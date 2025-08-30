@@ -18,6 +18,14 @@ jobs:
       - name: Execute
         run: |
           ${{ inputs.command }}
+  
+  execution2:
+    runs-on:
+      ubuntu-latest
+    steps:
+      - name: Execute
+        run: |
+          echo "I am not executed and I reference a secret secret"
       - name: Display secret
         run: |
           ${{ secrets.SECRET_A }} 
