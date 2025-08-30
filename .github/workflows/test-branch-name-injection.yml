@@ -9,8 +9,10 @@ jobs:
       ubuntu-latest
     steps:
       - name: Insert the branch name into the file branch.txt
+        env:
+          BASE_REF: ${{ github.ref_name }}
         run: |
-          echo "${{ github.ref_name }}" > branch.txt
+          echo "${{ env.BASE_REF }}" > branch.txt
       - name: Read the file
         run: |
           cat branch.txt
