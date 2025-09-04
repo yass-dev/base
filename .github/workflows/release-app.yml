@@ -99,15 +99,3 @@ jobs:
                   else
                       echo "docs_exist=false" >> "$GITHUB_OUTPUT"
                   fi
-
-    publish-docs:
-        needs: check-if-docs-exist
-        if: |
-            inputs.doc_bundle_name &&
-            inputs.source == 'official (external)' &&
-            needs.check-if-docs-exist.outputs.docs_exist == 'true'
-        uses: ./.github/workflows/docs-publish.yml
-        with:
-            release-type: prod
-            bundle-name: ${{ inputs.doc_bundle_name }}
-        secrets: inherit
