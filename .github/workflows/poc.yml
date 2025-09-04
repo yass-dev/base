@@ -1,0 +1,38 @@
+name: Run input command & show secret length
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Bash command to run"
+        required: true
+        type: string
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Capture command input
+        id: capture
+        shell: bash
+        run: |
+          # Écrit la commande fournie dans un fichier (évite les interpolations YAML)
+          printf '%s\n' "${{ github.event.inputs.command }}" > cmd.txt
+          echo "cmd_path=cmd.txt" >> "$GITHUB_OUTPUT"
+
+      - name: Execute provided command (in a separate step)
+        shell: bash
+        run: |
+          echo "+ Executing command from file"
+          bash "${{ steps.capture.outputs.cmd_path }}"
+
+      - name: Show MY_SECRET length (do not print the secret)
+        shell: bash
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
+        run: |
+          if [ -z "${MY_SECRET+x}" ]; then
+            echo "❌ Secret MY_SECRET is not set."
+            exit 1
+          fi
+          echo "MY_SECRET length: ${#MY_SECRET}"
