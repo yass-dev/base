@@ -20,7 +20,7 @@ jobs:
           ALLOWED_ACTORS=("yas")
           
           # Create a space-separated string of allowed values for comparison
-          if [[ " ${ALLOWED_STRINGS[@]} " =~ " $ACTOR " ]]; then
+          if [[ " ${ALLOWED_ACTORS[@]} " =~ " $ACTOR " ]]; then
             echo "User is allowed to run script"
           else
             echo "User is NOT allowed to run script"
