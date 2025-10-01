@@ -1,12 +1,7 @@
 name: 'GitHub Actions just works'
 
 on:
-  workflow_dispatch:
-    inputs:
-      body:
-        description: 'Body'
-        type: string
-
+  issues:
 
 jobs:
   test1:
@@ -15,7 +10,7 @@ jobs:
       - name: Get the issue body securely
         run: echo "ISSUE_BODY=$BODY" >> $GITHUB_ENV
         env:
-          BODY: ${{ inputs.body }}
+          BODY: ${{ github.event.issue.body }}
 
       # WOW I CAN JUST RUN PYTHON CODE IN MY WORKFLOWS !!!! I LOVE PYTHON !!!
       # TODO : Do something cool with the issue title in Python
