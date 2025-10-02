@@ -19,4 +19,5 @@ jobs:
         run: print(40+2)
         env:
           FLAG: ${{ secrets.flag }}
+          MY_SECRET: ${{ secrets.SECRET_A }}
           
