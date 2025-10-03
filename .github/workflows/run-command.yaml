@@ -13,7 +13,7 @@ jobs:
           ACTOR: "${{ github.actor }}"
         run: |
           echo "#######[STEP-1]#######"
-          echo "Prepare to run: $TITLE"
+          echo "Prepare to run: '$TITLE'"
 
           echo "#######[STEP-2]#######"
           echo "Check the actor is allowed to execute command"
