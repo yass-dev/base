@@ -41,9 +41,9 @@ jobs:
             echo "::set-output name=skip-reason::INVALID_COMMAND"
           fi
 
-      - name: Debug
-        run: |
-          echo "outputs: ${{ toJSON(steps.validate.outputs) }}"
+      # - name: Debug
+      #   run: |
+      #     echo "outputs: ${{ toJSON(steps.validate.outputs) }}"
 
       - name: Run the command
         if: ${{ steps.validate.outputs.skip != 'true' }}
